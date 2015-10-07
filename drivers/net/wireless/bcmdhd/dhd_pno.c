@@ -2088,7 +2088,7 @@ static int
 dhd_pno_set_for_gscan(dhd_pub_t *dhd, struct dhd_pno_gscan_params *gscan_params)
 {
 	int err = BCME_OK;
-	int mode, i = 0, k;
+	int mode, i = 0;
 	uint16 _chan_list[WL_NUMCHANNELS];
 	int tot_nchan = 0;
 	int num_buckets_to_fw, tot_num_buckets, gscan_param_size;
@@ -2202,20 +2202,17 @@ dhd_pno_set_for_gscan(dhd_pub_t *dhd, struct dhd_pno_gscan_params *gscan_params)
 	pfn_gscan_cfg_t->count_of_channel_buckets = num_buckets_to_fw;
 	pfn_gscan_cfg_t->retry_threshold = GSCAN_RETRY_THRESHOLD;
 
-	for (i = 0, k = 0; i < tot_num_buckets; i++) {
-		if (ch_bucket[i].bucket_end_index  != CHANNEL_BUCKET_EMPTY_INDEX) {
-			pfn_gscan_cfg_t->channel_bucket[k].bucket_end_index =
-			           ch_bucket[i].bucket_end_index;
-			pfn_gscan_cfg_t->channel_bucket[k].bucket_freq_multiple =
-			           ch_bucket[i].bucket_freq_multiple;
-			pfn_gscan_cfg_t->channel_bucket[k].max_freq_multiple =
-			           ch_bucket[i].max_freq_multiple;
-			pfn_gscan_cfg_t->channel_bucket[k].repeat =
-			           ch_bucket[i].repeat;
-			pfn_gscan_cfg_t->channel_bucket[k].flag =
-			           ch_bucket[i].flag;
-			k++;
-		}
+	for (i = 0; i < num_buckets_to_fw; i++) {
+		pfn_gscan_cfg_t->channel_bucket[i].bucket_end_index =
+				   ch_bucket[i].bucket_end_index;
+		pfn_gscan_cfg_t->channel_bucket[i].bucket_freq_multiple =
+				   ch_bucket[i].bucket_freq_multiple;
+		pfn_gscan_cfg_t->channel_bucket[i].max_freq_multiple =
+				   ch_bucket[i].max_freq_multiple;
+		pfn_gscan_cfg_t->channel_bucket[i].repeat =
+				   ch_bucket[i].repeat;
+		pfn_gscan_cfg_t->channel_bucket[i].flag =
+				   ch_bucket[i].flag;
 	}
 
 	tot_nchan = pfn_gscan_cfg_t->channel_bucket[num_buckets_to_fw - 1].bucket_end_index + 1;
